@@ -76,7 +76,7 @@ body {
 	min-height: 100%;
 }
 body {
-	font-size: 11px;
+	font-size: 12px;
 	line-height: 160%;
 	background: url(x.gif) #FFFFFF fixed no-repeat;
 }
@@ -115,6 +115,7 @@ a {
 	font-size: inherit;
 }
 blockquote {
+font-size: 12px;
 	margin: 0;
 	padding: 0 0 0 9px;
 	border-left: 1px dotted;
