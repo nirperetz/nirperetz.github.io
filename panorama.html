@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html style="position: relative; transition: right 0.25s ease-in-out 0s; right: 0px;" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>project</title>
+
+<meta name="image:Background" content="">
+<meta name="image:Sidebar" content="">
+<meta name="color:Background" content="#444444">
+<meta name="color:Hover color" content="#444444">
+<meta name="text:Blog title size" content="20px">
+<meta name="if:Infinite scroll" content="1">
+<meta name="color:Body text" content="#ffffff">
+<meta name="color:Sidebar text" content="#ffffff"><!DOCTYPE html>
+<html style="position: relative; transition: right 0.25s ease-in-out 0s; right: 0px;" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>project</title>
+
+<meta name="image:Background" content="">
+<meta name="image:Sidebar" content="">
+<meta name="color:Background" content="#444444">
+<meta name="color:Hover color" content="#444444">
+<meta name="text:Blog title size" content="20px">
+<meta name="if:Infinite scroll" content="1">
+<meta name="color:Body text" content="#ffffff">
+<meta name="color:Sidebar text" content="#ffffff">
+<meta name="text:Columns" content="4">
+<meta name="font:Body" content="Helvetica Neue">
+<meta name="if:Repeat background" content="0">
+
+<script type="text/javascript" src="js/jquery-1.js"></script>
+<script type="text/javascript" src="js/theme.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+
+<link rel="stylesheet" type="text/css" href="style/stylesheet.css">
+<meta http-equiv="x-dns-prefetch-control" content="off">
+
+<!--video.js-->
+<link href="http://vjs.zencdn.net/4.8/video-js.css" rel="stylesheet">
+<script src="http://vjs.zencdn.net/4.8/video.js"></script>
+<style type="text/css">
+  .vjs-default-skin { color: #ffffff; }
+  .vjs-default-skin .vjs-play-progress,
+  .vjs-default-skin .vjs-volume-level { background-color: #ffffff }
+  .vjs-default-skin .vjs-control-bar,
+  .vjs-default-skin .vjs-big-play-button { background: rgba(255,255,255,0) }
+  .vjs-default-skin .vjs-slider { background: rgba(255,255,255,0) }
+  .vjs-default-skin .vjs-control-bar { font-size: 60% }
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="sss/sss.min.js"></script>
+<link rel="stylesheet" href="sss/sss.css" type="text/css" media="all">
+
+<script>
+jQuery(function($) {
+$('.slider').sss({
+slideShow : true, // Set to false to prevent SSS from automatically animating.
+startingSlide : 0, // Slide to display first. Uses array notation (0 = first slide).
+speed : 3500, // Slideshow speed in milliseconds.
+showNav : true // Set to false to hide navigation arrows.
+});
+});
+</script>
+</head>
+
+<body data-pinterest-extension-installed="ff1.32" class="productdesignresources" id="34881"style="background:#111111;">
+
+
+	<div class="wrap wrap_columns_4" >
+    
+    <div class="sidebar sidebar_margin_columns_4">
+    
+    	
+        <a class="title" href = "index.html"><h1 style="color: #ffffff;">Nir Peretz</h1><p style="color: #ffffff;">
+ Protfolio. Some projects from my computer science and animation studies. Thank's for visiting.</p></a>
+</div>
+    <h1>panorama stitching</h1>
+	
+<div class="slider" >
+<div><img style = "max-height:401px;"src="img/imp/panorama.jpg" /></div>
+
+<div><img src="img/imp/2.jpg" /></div>
+<div><img src="img/imp/3.jpg" /></div>
+<div><img src="img/imp/4.jpg" /></div>
+<div><img src="img/imp/5.jpg" /></div>
+
+
+
+</div>
+	
+    
+
+    <div  class="post load masonry-brick" style="width:360px;">
+        
+   
+<blockquote><p >panorama Registration & stitching.
+Registration: The geometric transformation between each consecutive image pair is registered by
+detecting "Harris feature points", extracting their MOPS-like descriptors, matching these descriptors
+between the pair and eventually fitting a homography transformation that agrees with a large set
+of inlying matches using the
+RANSAC algorithm.
+
+Stitching: The above per-pair homographies are multiplied together in such a way that homogra-
+phies transforming all frames into a common coordinate system are produced. The panorama is
+then rendered in this common coordinate system by
+backwarping
+from each frame into a vertical
+strip of the panorama.
+
+
+</p></blockquote><p >build in MATLAB. image processing course, huji 2013.</p>
+        
+
+        
+        
+
+</div>
+	
+</div>
+
+</body></html>
+

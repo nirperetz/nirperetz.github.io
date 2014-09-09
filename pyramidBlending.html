@@ -13,6 +13,21 @@
 <meta name="text:Blog title size" content="20px">
 <meta name="if:Infinite scroll" content="1">
 <meta name="color:Body text" content="#ffffff">
+<meta name="color:Sidebar text" content="#ffffff"><!DOCTYPE html>
+<html style="position: relative; transition: right 0.25s ease-in-out 0s; right: 0px;" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>project</title>
+
+<meta name="image:Background" content="">
+<meta name="image:Sidebar" content="">
+<meta name="color:Background" content="#444444">
+<meta name="color:Hover color" content="#444444">
+<meta name="text:Blog title size" content="20px">
+<meta name="if:Infinite scroll" content="1">
+<meta name="color:Body text" content="#ffffff">
 <meta name="color:Sidebar text" content="#ffffff">
 <meta name="text:Columns" content="4">
 <meta name="font:Body" content="Helvetica Neue">
@@ -38,10 +53,23 @@
   .vjs-default-skin .vjs-control-bar { font-size: 60% }
 </style>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="sss/sss.min.js"></script>
+<link rel="stylesheet" href="sss/sss.css" type="text/css" media="all">
 
+<script>
+jQuery(function($) {
+$('.slider').sss({
+slideShow : true, // Set to false to prevent SSS from automatically animating.
+startingSlide : 0, // Slide to display first. Uses array notation (0 = first slide).
+speed : 3500, // Slideshow speed in milliseconds.
+showNav : true // Set to false to hide navigation arrows.
+});
+});
+</script>
 </head>
 
-<body data-pinterest-extension-installed="ff1.32" class="productdesignresources" id="34881"style="background:#111111;"  ">
+<body data-pinterest-extension-installed="ff1.32" class="productdesignresources" id="34881"style="background:#111111;">
 
 
 	<div class="wrap wrap_columns_4" >
@@ -52,41 +80,29 @@
         <a class="title" href = "index.html"><h1 style="color: #ffffff;">Nir Peretz</h1><p style="color: #ffffff;">
  Protfolio. Some projects from my computer science and animation studies. Thank's for visiting.</p></a>
 </div>
-    
-    <div class="posts columns_4 masonry" style="opacity: 1; position: relative; height: 3993px;">    
-    	
- 
+    <h1>panorama stitching</h1>
+	
+<div class="slider" >
+<div><img src="img/imp/dancer1.jpg" /></div>
+<div><img src="img/imp/dancer2.jpg" /></div>
+<div><img src="img/imp/dancer4.jpg" /></div>
+<div><img src="img/imp/dancer3.jpg" /></div>
 
-        
-        
-        		<div  class="post load masonry-brick" style="width:360px;"><div class=""><video id="MY_VIDEO_1" class="video-js vjs-default-skin" controls
-	preload="auto" width="640" height="360" poster=""
-	data-setup="{}">
-	<source src="video/cube2.mp4" type='video/mp4'>
-	<source src="MY_VIDEO.webm" type='video/webm'>
-	<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-	</video></div>
+
+
+</div>
+	
+    
+
+    <div  class="post load masonry-brick" style="width:360px;">
         
    
+<blockquote><p >This exercise deals with image pyramids, low-pass and band-pass filtering, and their application in image
+blending. construct gaussian and laplacian pyramids, use these to implement
+pyramid blending.
 
 
-<blockquote><p >An attempt to create a "cubism-like" interactive 3d rendered space.</br>
-(My final project in computer games cource).
-
-there are 5 diffrent items: chair, table, bottle, glass and a teapot.
-for each item i made nine different tiles that represent it and showing it from different
-angles according to the position of the camera. each angle is rendered with the framebuffer into 
-texture.
-after rendering each item to nine texture of different point of views , i placed them in space facing
-always to the camera, and randomly changing there shape.
-and after all that i added another post processing to all of the scene, adding canvas and manipulating
-colors.
-for each item i added a silhouette, for painting like feeling.
-
-
-
-
-</p></blockquote><p >(Build with: c++, openGL, openAL, cg)</p>
+</p></blockquote><p >build in MATLAB. image processing course, huji 2013.</p>
         
 
         
@@ -94,7 +110,7 @@ for each item i added a silhouette, for painting like feeling.
 
 </div>
 	
-
+</div>
 
 </body></html>
 
