@@ -1,0 +1,361 @@
+/*
+ * Web Fonts from fontspring.com
+ *
+ * All OpenType features and all extended glyphs have been removed.
+ * Fully installable fonts can be purchased at http://www.fontspring.com
+ *
+ * The fonts included in this stylesheet are subject to the End User License you purchased
+ * from Fontspring. The fonts are protected under domestic and international trademark and 
+ * copyright law. You are prohibited from modifying, reverse engineering, duplicating, or
+ * distributing this font software.
+ *
+ * (c) 2010-2013 Fontspring
+ *
+ *
+ *
+ *
+ * The fonts included are copyrighted by the vendor listed below.
+ *
+ * Vendor:      Canada Type
+ * License URL: http://www.fontspring.com/fflicense/canada-type
+ *
+ *
+ */
+
+@font-face {
+    font-family: 'Gibson';
+    src: url('Gibson-Regular-webfont.eot?3');
+    src: url('Gibson-Regular-webfont.eot?3?#iefix') format('embedded-opentype'),
+         url('Gibson-Regular-webfont.woff?3') format('woff'),
+         url('Gibson-Regular-webfont.ttf?3') format('truetype'),
+         url('Gibson-Regular-webfont.svg?3#GibsonRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Gibson';
+    src: url('Gibson-SemiBold-webfont.eot?3');
+    src: url('Gibson-SemiBold-webfont.eot?3?#iefix') format('embedded-opentype'),
+         url('Gibson-SemiBold-webfont.woff?3') format('woff'),
+         url('Gibson-SemiBold-webfont.ttf?3') format('truetype'),
+         url('Gibson-SemiBold-webfont.svg?3#GibsonLightBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Gibson';
+    src: url('Gibson-Italic-webfont.eot?3');
+    src: url('Gibson-Italic-webfont.eot?3?#iefix') format('embedded-opentype'),
+         url('Gibson-Italic-webfont.woff?3') format('woff'),
+         url('Gibson-Italic-webfont.ttf?3') format('truetype'),
+         url('Gibson-Italic-webfont.svg?3#GibsonItalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+@font-face {
+    font-family: 'Gibson';
+    src: url('Gibson-SemiBoldItalic-webfont.eot?3');
+    src: url('Gibson-SemiBoldItalic-webfont.eot?3?#iefix') format('embedded-opentype'),
+         url('Gibson-SemiBoldItalic-webfont.woff?3') format('woff'),
+         url('Gibson-SemiBoldItalic-webfont.ttf?3') format('truetype'),
+         url('Gibson-SemiBoldItalic-webfont.svg?3#GibsonLightBoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+
+}
+@importurl('http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic');
+html,
+body {
+    margin: 0;
+	min-height: 100%;
+}
+body {
+	font-size: 11px;
+	line-height: 160%;
+	background: url(x.gif) #FFFFFF fixed no-repeat;
+}
+.wrap {
+	position: relative;
+	
+	margin: 50px auto;
+}
+.wrap_columns_1 {
+	width: 410px;
+}
+.wrap_columns_2 {
+	width: 670px;
+}
+.wrap_columns_3 {
+	width: 930px;
+}
+.wrap_columns_4 {
+	width: 1190px;
+}
+.wrap_columns_5 {
+	width: 1450px;
+}
+.wrap_columns_6 {
+	width: 1710px;
+}
+* {
+	font-family: 'PT Sans', Arial, sans-serif;
+	color: #ffffff;
+}
+a img {
+	border: none;
+}
+a {
+	color: inherit;
+	font-size: inherit;
+}
+blockquote {
+	margin: 0;
+	padding: 0 0 0 9px;
+	border-left: 1px dotted;
+}
+.sidebar {
+	position: fixed;
+	width: 125px;
+}
+.sidebar_margin_columns_1 {
+	margin-left: 285px;
+}
+.sidebar_margin_columns_2 {
+	margin-left: 545px;
+}
+.sidebar_margin_columns_3 {
+	margin-left: 805px;
+}
+.sidebar_margin_columns_4 {
+	margin-left: 1065px;
+}
+.sidebar_margin_columns_5 {
+	margin-left: 1325px;
+}
+.sidebar_margin_columns_6 {
+	margin-left: 1585px;
+}
+.sidebar * {
+	color: #000000
+}
+.sidebar a {
+	text-decoration: none;
+}
+.sidebar img {
+	max-width: 100%;
+}
+.sidebar .title h1 {
+	margin: 0 0 15px 0;
+	line-height: 100%;
+	font-weight: 700;
+	font-size: 20px;
+}
+.sidebar p {
+	margin: 5px 0;
+}
+.sidebar ul {
+	margin: 7px 0;
+	padding: 0;
+	list-style: none;
+}
+.sidebar ul li {
+	margin: 2px 0;
+}
+.sidebar ul li:hover a {
+	background-color: #444444;
+}
+.sidebar input {
+	width: 75%;
+	background: transparent;
+	border: 0px;
+	border-bottom: 1px solid;
+	outline: none;
+}
+.navigation {
+	margin: 15px 0;
+	font-size: 20px;
+}
+.posts {
+	position: relative;
+	float: left;
+	
+}
+.columns_1 {
+	width: 260px;
+}
+.columns_2 {
+	width: 520px;
+}
+.columns_3 {
+	width: 780px;
+}
+.columns_4 {
+	width: 1040px;
+}
+.columns_5 {
+	width: 1300px;
+}
+.columns_6 {
+	width: 1560px;
+}
+.post {
+	float: left;
+	position: relative;
+	margin: 5px;
+}
+.post h2 {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 700;
+}
+.post h2.quote {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	letter-spacing: 0;
+	font-style: italic;
+}
+.post p,
+.post li {
+	line-height: 175%;
+}
+.post p {
+	margin: 10px 0 5px 0;
+}
+.post ol,.post ul {
+	margin: 3px 0;
+	padding: 0;
+}
+.post li {
+	margin: 2px 35px;
+}
+.post .info_bar {
+	padding: 5px 0;
+	border-radius: 3px;
+	line-height: 100%;
+	width: 100px;
+	text-align: center;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	margin-left: -50px;
+	font-size: 11px;
+	opacity: 0;
+	-webkit-transition: opacity 0.25s ease;
+	-moz-transition: opacity 0.25s ease;
+	-ms-transition: opacity 0.25s ease;
+	-o-transition: opacity 0.25s ease;
+	transition: opacity 0.25s ease;
+	background: #000000;
+	color: #FFFFFF;
+	-webkit-box-shadow:  0px 0px 50px 0px #000000;
+    box-shadow:  0px 0px 50px 0px #000000;
+	  
+}
+.post:hover .info_bar {
+	opacity: 0.9;
+}
+.post .info_bar a {
+	color: #FFFFFF;
+	text-decoration: none;
+	margin: 0 5px;
+}
+.post .photo {
+	position: relative;
+	padding: 0;
+	line-height: 0 !important;
+	
+	background: rgba(0,0,0,1);
+	
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.post .main_photo {
+	width: 100%;
+}
+.post img {
+	max-width: 100%;
+	height: auto;
+}
+.post .photo img {
+	opacity: 1;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	margin: 0;
+	line-height: 0;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.post:hover .photo img {
+	
+	opacity: 0.5;
+	
+}
+.post .player {
+	padding: 2px 10px;
+	background: #FFF;
+	margin: 0;
+}
+.post .lines {
+	margin: 0 0 5px 0;
+}
+.post .lines .line {
+	padding: 5px 10px;
+}
+.post .lines .odd {
+}
+.post .lines .even {
+	background: #000000;
+	color: #FFFFFF;
+}
+.post .lines .even * {
+	color: #FFFFFF;
+}
+.post ol.notes {
+	padding: 0;
+	list-style-type: none;
+}
+.post ol.notes li.note {
+	border-bottom: solid 1px #F6F6F6;
+	padding: 6px 0;
+	margin: 0 !important;
+}
+.post ol.notes li.note img.avatar {
+	vertical-align: -4px;
+	margin-right: 10px;
+	width: 16px;
+	height: 16px;
+}
+.post ol.notes li.note span.action {
+}
+.post ol.notes li.note .answer_content {
+	font-weight: normal;
+}
+.post ol.notes li.note blockquote {
+	border-color: #F6F6F6;
+	padding: 4px 10px;
+	margin: 10px 0px 0px 25px;
+}
+.post ol.notes li.note blockquote a {
+	text-decoration: none;
+}
+.pagination {
+	display: none;
+}
+.post{ 
+	width: 250px;
+}
+
+#mockup{
+width:50%;
+}
+
+  
