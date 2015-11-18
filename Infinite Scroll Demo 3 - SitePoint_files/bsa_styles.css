@@ -1,0 +1,15 @@
+/* BSA */
+.bsap {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  z-index: 999;
+}
+.close_bsap {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  padding: 5px 8px;
+}
