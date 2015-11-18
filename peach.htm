@@ -38,7 +38,7 @@
 	image1.src = 'Infinite%20Scroll%20Demo%203%20-%20SitePoint_files/1.png';
 	//document.body.appendChild(image1);
       $(document).endlessScroll({
-        bottomPixels: 500,
+        bottomPixels: 10000,
         fireDelay: 0,
         callback: function(i) {
           var last_img = $("ul#images li:last");
@@ -55,6 +55,7 @@
   <ul id="images" style="padding-left: 0px;">
 
     <li><img src="Infinite%20Scroll%20Demo%203%20-%20SitePoint_files/1.png" alt="Lightning" width="100%"></li>
+	
 
   </ul>
 
