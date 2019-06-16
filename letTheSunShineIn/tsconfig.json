@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./transpiled",
+    "target": "es6",
+    "sourceMap": true,
+    "allowJs": false,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
