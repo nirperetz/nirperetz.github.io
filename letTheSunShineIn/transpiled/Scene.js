@@ -1,7 +1,7 @@
 // ------------------------------------------------
 // BASIC SETUP
 // -----------------------------------------------
-import * as THREE from '../node_modules/three/build/three.module.js';
+import * as THREE from '../vendor/three.module.js';
 import sun_fragment_shader from '../myShaders/sun_fragment_shader.glsl.js';
 import sun_vertex_shader from '../myShaders/sun_vertex_shader.glsl.js';
 // import default_fragment from '/myShaders/test_fragment_shader';

@@ -2,7 +2,7 @@
 // ------------------------------------------------
 // BASIC SETUP
 // -----------------------------------------------
-import * as THREE from '../node_modules/three/build/three.module.js';
+import * as THREE from '../vendor/three.module.js';
 // import * as THREE from 'three';
 // import { EffectComposer, EffectPass, RenderPass } from "../node_modules/postprocessing/build/postprocessing.esm.js";
 // import { EffectComposer, EffectPass, RenderPass } from "../node_modules/postprocessing/build/postprocessing.esm.js";
