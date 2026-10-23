@@ -1,0 +1,11 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "orbit-dodge",
+  "title": "Orbit Dodge",
+  "visibility": "unlisted",
+  "kind": "game",
+  "description": "A one-button arcade game on Canvas 2D. Unlisted: only reachable by its URL.",
+  "tags": ["canvas 2d", "typescript", "game loop"],
+  "year": 2026,
+  "outDir": "dist"
+}

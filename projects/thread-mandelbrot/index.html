@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Threaded Mandelbrot</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; color: #eae6dc; font: 13px/1.5 ui-monospace, Menlo, monospace; overflow: hidden; }
+      canvas { display: block; width: 100%; height: 100%; cursor: zoom-in; touch-action: none; }
+      .hud { position: fixed; left: 16px; bottom: 16px; right: 16px; display: flex; gap: 16px; flex-wrap: wrap; text-shadow: 0 1px 2px #000; }
+      .hud a { color: inherit; text-decoration: none; opacity: 0.7; }
+      .warn { color: #ff8a65; }
+    </style>
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+    <div class="hud">
+      <a href="/">← lab</a>
+      <span id="stats">starting…</span>
+      <span>click to zoom in · shift-click to zoom out</span>
+    </div>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

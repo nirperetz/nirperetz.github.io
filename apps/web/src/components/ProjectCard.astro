@@ -1,0 +1,93 @@
+---
+import type { ProjectSummary } from "@aninir/lab-core";
+
+interface Props {
+  project: ProjectSummary;
+}
+const { project } = Astro.props;
+
+// Projects without a thumbnail get a stable two-tone swatch derived from the slug.
+const hue = [...project.slug].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) % 360, 7);
+const swatch = `linear-gradient(135deg, hsl(${hue} 70% 55%), hsl(${(hue + 60) % 360} 70% 35%))`;
+---
+
+<a class="card" href={project.url}>
+  <div class="thumb" style={project.thumbnailUrl ? undefined : `background:${swatch}`}>
+    {project.thumbnailUrl && <img src={project.thumbnailUrl} alt="" loading="lazy" decoding="async" />}
+  </div>
+  <div class="body">
+    <div class="meta">
+      <span>{project.kind}</span>
+      {project.year && <span>{project.year}</span>}
+    </div>
+    <h3>{project.title}</h3>
+    {project.description && <p>{project.description}</p>}
+    {project.tags.length > 0 && (
+      <ul class="tags">
+        {project.tags.map((t) => <li>{t}</li>)}
+      </ul>
+    )}
+  </div>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .thumb {
+    aspect-ratio: 16 / 10;
+    background: var(--line);
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .body {
+    padding: 14px 16px 18px;
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    font: 12px var(--mono);
+    color: var(--muted);
+    text-transform: lowercase;
+  }
+  h3 {
+    margin: 6px 0 4px;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+  }
+  .tags li {
+    font: 11px var(--mono);
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+  }
+</style>

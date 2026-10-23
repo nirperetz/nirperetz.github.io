@@ -1,0 +1,24 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "aninir-edge",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  // Owns the domain. Until cutover it is only reachable on workers.dev.
+  // At cutover add: "routes": [{ "pattern": "aninir.com", "custom_domain": true },
+  //                            { "pattern": "www.aninir.com", "custom_domain": true }]
+  "workers_dev": true,
+  "services": [
+    { "binding": "WEB", "service": "aninir-web" },
+    { "binding": "API", "service": "aninir-api" }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aninir",
+      // Same database as apps/api. Read-only here.
+      "database_id": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+  "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab" }]
+  // Secret: PREVIEW_TOKEN, unlocks draft projects via ?preview=<token>.
+}

@@ -1,0 +1,26 @@
+{
+  "name": "aninir",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @aninir/web build && pnpm db:migrate:local && wrangler dev -c apps/edge/wrangler.jsonc -c apps/api/wrangler.jsonc -c apps/web/dist/server/wrangler.json --persist-to .wrangler/state",
+    "db:migrate:local": "wrangler d1 migrations apply aninir --local -c apps/api/wrangler.jsonc --persist-to .wrangler/state",
+    "build": "pnpm -r --filter \"./projects/**\" --filter @aninir/web build",
+    "check": "biome check .",
+    "fix": "biome check --write .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "lab": "lab"
+  },
+  "devDependencies": {
+    "@aninir/lab-cli": "workspace:*",
+    "@biomejs/biome": "2.6.2",
+    "typescript": "7.0.2",
+    "vitest": "5.0.5",
+    "wrangler": "4.152.0"
+  }
+}

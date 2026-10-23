@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "thread-mandelbrot",
+  "title": "Threaded Mandelbrot",
+  "visibility": "listed",
+  "kind": "interactive",
+  "description": "Web Workers render into one SharedArrayBuffer. Shows the crossOriginIsolated flag that threaded WASM also needs.",
+  "tags": ["web workers", "sharedarraybuffer", "no build"],
+  "year": 2026,
+  "thumbnail": "thumb.svg",
+  "crossOriginIsolated": true
+}

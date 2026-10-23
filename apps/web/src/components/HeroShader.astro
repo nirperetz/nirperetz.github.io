@@ -1,0 +1,106 @@
+---
+// An island: the only JavaScript on the home page. Raw WebGL, no library.
+---
+
+<canvas class="hero-shader" aria-hidden="true"></canvas>
+
+<script>
+  const FRAG = `#version 300 es
+  precision highp float;
+  uniform vec2 uRes;
+  uniform float uTime;
+  uniform vec2 uMouse;
+  out vec4 outColor;
+
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float noise(vec2 p) {
+    vec2 i = floor(p), f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);
+  }
+  float fbm(vec2 p) {
+    float v = 0.0, a = 0.5;
+    for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.02; a *= 0.5; }
+    return v;
+  }
+  void main() {
+    vec2 uv = gl_FragCoord.xy / uRes;
+    vec2 p = uv * vec2(uRes.x / uRes.y, 1.0) * 2.5;
+    float t = uTime * 0.06;
+    vec2 q = vec2(fbm(p + t), fbm(p - t + 3.1));
+    float f = fbm(p + 2.0 * q + uMouse * 0.6);
+    vec3 warm = vec3(0.88, 0.33, 0.17), deep = vec3(0.08, 0.06, 0.1);
+    vec3 col = mix(deep, warm, smoothstep(0.35, 0.85, f));
+    col += 0.15 * vec3(1.0, 0.8, 0.6) * smoothstep(0.75, 1.0, f);
+    outColor = vec4(col, 1.0);
+  }`;
+
+  const VERT = `#version 300 es
+  in vec2 pos;
+  void main() { gl_Position = vec4(pos, 0.0, 1.0); }`;
+
+  for (const canvas of document.querySelectorAll<HTMLCanvasElement>(".hero-shader")) {
+    start(canvas);
+  }
+
+  function start(canvas: HTMLCanvasElement) {
+    const gl = canvas.getContext("webgl2", { antialias: false, powerPreference: "low-power" });
+    if (!gl) return canvas.remove();
+
+    const compile = (type: number, src: string) => {
+      const s = gl.createShader(type)!;
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return canvas.remove();
+    gl.useProgram(prog);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, "pos");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes = gl.getUniformLocation(prog, "uRes");
+    const uTime = gl.getUniformLocation(prog, "uTime");
+    const uMouse = gl.getUniformLocation(prog, "uMouse");
+    const mouse = [0, 0];
+    window.addEventListener("pointermove", (e) => {
+      mouse[0] = e.clientX / innerWidth - 0.5;
+      mouse[1] = 0.5 - e.clientY / innerHeight;
+    });
+
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scale = Math.min(devicePixelRatio, 1.5) * 0.5; // half-res: it's a soft background
+    const frame = (ms: number) => {
+      const w = Math.floor(canvas.clientWidth * scale);
+      const h = Math.floor(canvas.clientHeight * scale);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        gl.viewport(0, 0, w, h);
+      }
+      gl.uniform2f(uRes, w, h);
+      gl.uniform1f(uTime, reduced ? 20 : ms / 1000);
+      gl.uniform2f(uMouse, mouse[0]!, mouse[1]!);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (!reduced) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
+</script>
+
+<style>
+  .hero-shader {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "palette-router",
+  "title": "Palette Router",
+  "visibility": "listed",
+  "kind": "app",
+  "description": "A tiny single-page app with real URLs (/p/ff5e3a). Shows the spa flag: deep links load the app.",
+  "tags": ["spa", "history api", "no build"],
+  "year": 2026,
+  "thumbnail": "thumb.svg",
+  "spa": true
+}

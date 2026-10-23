@@ -1,0 +1,22 @@
+{
+  "name": "@aninir/api",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler d1 migrations apply aninir --remote && wrangler deploy",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@aninir/lab-core": "workspace:*",
+    "@hono/zod-validator": "0.9.1",
+    "hono": "4.13.13",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261019.1"
+  }
+}

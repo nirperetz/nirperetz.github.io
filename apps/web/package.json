@@ -1,0 +1,21 @@
+{
+  "name": "@aninir/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "deploy": "astro build && wrangler deploy",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@aninir/lab-core": "workspace:*",
+    "@astrojs/cloudflare": "14.4.2",
+    "astro": "7.4.2",
+    "hono": "4.13.13"
+  },
+  "devDependencies": {
+    "@aninir/api": "workspace:*",
+    "@cloudflare/workers-types": "5.20261019.1"
+  }
+}

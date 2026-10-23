@@ -1,0 +1,92 @@
+name: deploy
+
+# Deploys only what changed on master: platform Workers first, then projects.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      projects:
+        description: Space-separated project folders to deploy (e.g. "shader-garden archive")
+        required: false
+
+concurrency: deploy
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      platform: ${{ steps.filter.outputs.changes }}
+      projects: ${{ steps.projects.outputs.list }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            api: [apps/api/**, packages/lab-core/**]
+            edge: [apps/edge/**, packages/lab-core/**]
+            web: [apps/web/**, apps/api/src/**, packages/lab-core/**]
+      - id: projects
+        name: Changed projects
+        env:
+          REQUESTED: ${{ inputs.projects }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$REQUESTED" ]; then
+            dirs="$REQUESTED"
+          else
+            dirs=$(git diff --name-only "$BEFORE" HEAD -- projects | cut -d/ -f2 | sort -u)
+          fi
+          list=$(for d in $dirs; do [ -f "projects/$d/lab.json" ] && echo "$d"; done | jq -Rcn '[inputs]')
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  platform:
+    needs: changes
+    if: needs.changes.outputs.platform != '[]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Order matters: web and edge call the API, so it goes first.
+      - if: contains(needs.changes.outputs.platform, 'api')
+        run: pnpm --filter @aninir/api deploy
+      - if: contains(needs.changes.outputs.platform, 'web')
+        run: pnpm --filter @aninir/web deploy
+      - if: contains(needs.changes.outputs.platform, 'edge')
+        run: pnpm --filter @aninir/edge deploy
+
+  projects:
+    needs: [changes, platform]
+    if: always() && needs.changes.outputs.projects != '[]' && needs.platform.result != 'failure'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.changes.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build (if the project has a build script)
+        run: pnpm --filter "./projects/${{ matrix.project }}" --if-present build
+      - name: Deploy
+        env:
+          LAB_API: ${{ vars.LAB_API || 'https://aninir.com' }}
+          LAB_DEPLOY_TOKEN: ${{ secrets.LAB_DEPLOY_TOKEN }}
+        run: pnpm lab deploy "projects/${{ matrix.project }}"

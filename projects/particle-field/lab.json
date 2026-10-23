@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "particle-field",
+  "title": "Particle Field",
+  "visibility": "listed",
+  "kind": "3d",
+  "description": "150k particles moved by curl noise in a vertex shader. Modern three.js, Vite and TypeScript.",
+  "tags": ["three.js r186", "glsl", "vite"],
+  "year": 2026,
+  "thumbnail": "thumb.svg",
+  "outDir": "dist"
+}

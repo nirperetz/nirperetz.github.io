@@ -1,0 +1,107 @@
+---
+import ProjectCard from "../components/ProjectCard.astro";
+import HeroShader from "../components/HeroShader.astro";
+import Base from "../layouts/Base.astro";
+import { api } from "../lib/api";
+
+// Rendered per request from the registry, so a new deploy shows up without rebuilding the site.
+const res = await api.api.projects.$get({ query: {} });
+const { projects } = res.ok ? await res.json() : { projects: [] };
+
+const kinds = [...new Set(projects.map((p) => p.kind))].sort();
+const active = Astro.url.searchParams.get("kind");
+const shown = active ? projects.filter((p) => p.kind === active) : projects;
+
+Astro.response.headers.set("cache-control", "public, max-age=60");
+---
+
+<Base title="aninir lab">
+  <section class="hero">
+    <HeroShader />
+    <div class="hero-text">
+      <h1>Experiments in light,<br />space and play.</h1>
+      <p>3D, shaders, games and interactive pieces by Nir Peretz. Each one is its own little world.</p>
+    </div>
+  </section>
+
+  <nav class="filters" aria-label="Filter by kind">
+    <a href="/" aria-current={active ? undefined : "page"}>All <small>{projects.length}</small></a>
+    {
+      kinds.map((k) => (
+        <a href={`/?kind=${encodeURIComponent(k)}`} aria-current={k === active ? "page" : undefined}>
+          {k} <small>{projects.filter((p) => p.kind === k).length}</small>
+        </a>
+      ))
+    }
+  </nav>
+
+  {
+    shown.length > 0 ? (
+      <section class="grid">
+        {shown.map((p) => <ProjectCard project={p} />)}
+      </section>
+    ) : (
+      <p class="empty">{res.ok ? "Nothing here yet." : "The lab is briefly unreachable. Try again in a moment."}</p>
+    )
+  }
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    min-height: 340px;
+    display: flex;
+    align-items: flex-end;
+    background: #140f12;
+  }
+  .hero-text {
+    position: relative;
+    padding: 32px;
+    color: #fff6ee;
+    max-width: 640px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: clamp(32px, 6vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+  .hero-text p {
+    margin: 0;
+    opacity: 0.85;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 28px 0 20px;
+  }
+  .filters a {
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+  }
+  .filters a[aria-current="page"] {
+    color: var(--bg);
+    background: var(--fg);
+    border-color: var(--fg);
+  }
+  .filters small {
+    opacity: 0.6;
+    margin-left: 2px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+  }
+  .empty {
+    color: var(--muted);
+    padding: 48px 0;
+  }
+</style>

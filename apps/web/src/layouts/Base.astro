@@ -1,0 +1,118 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "Experiments in 3D, shaders, games and interactive work by Nir Peretz." } =
+  Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="/">aninir<span>/lab</span></a>
+      <nav>
+        <a href="/">Work</a>
+        <a href="/about">About</a>
+        <a href="/lab/archive/">2014 archive</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <span>© {new Date().getFullYear()} Nir Peretz</span>
+      <a href="/schemas/lab.json">lab.json schema</a>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f4ef;
+    --fg: #191816;
+    --muted: #6d6a63;
+    --line: #dedad1;
+    --card: #ffffff;
+    --accent: #e0542b;
+    --radius: 14px;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f0e;
+      --fg: #edeae3;
+      --muted: #9a968d;
+      --line: #2a2926;
+      --card: #171715;
+      --accent: #ff7a4d;
+    }
+  }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+  a {
+    color: inherit;
+  }
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 16px 64px;
+  }
+  .site-header,
+  .site-footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .site-footer {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .wordmark {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  .wordmark span {
+    color: var(--accent);
+  }
+  nav {
+    display: flex;
+    gap: 20px;
+    font-size: 15px;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  nav a:hover {
+    color: var(--fg);
+  }
+</style>

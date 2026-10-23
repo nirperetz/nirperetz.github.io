@@ -1,0 +1,11 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "shader-garden",
+  "title": "Shader Garden",
+  "visibility": "listed",
+  "kind": "shader",
+  "description": "Four fragment shaders on one fullscreen triangle. Raw WebGL2, no build step, no libraries.",
+  "tags": ["webgl2", "glsl", "no build"],
+  "year": 2026,
+  "thumbnail": "thumb.svg"
+}

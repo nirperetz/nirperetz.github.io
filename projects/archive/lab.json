@@ -1,0 +1,10 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "archive",
+  "title": "Portfolio 2014",
+  "visibility": "unlisted",
+  "kind": "archive",
+  "description": "The original aninir.com, kept exactly as it was.",
+  "year": 2014,
+  "exclude": ["*.db"]
+}

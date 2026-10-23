@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master, platform]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec biome ci .
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - name: Validate every project
+        run: pnpm lab validate projects/*/

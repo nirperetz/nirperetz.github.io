@@ -1,0 +1,11 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "let-the-sunshine-in",
+  "title": "Let the Sunshine In",
+  "visibility": "listed",
+  "kind": "shader",
+  "description": "A sun built from custom GLSL, driven by the scroll wheel. TypeScript and three.js r104.",
+  "tags": ["three.js r104", "glsl", "typescript"],
+  "year": 2019,
+  "exclude": ["README", "package-lock.json"]
+}

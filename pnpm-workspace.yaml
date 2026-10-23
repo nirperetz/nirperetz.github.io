@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+  - projects/*
+
+# Only these dependencies may run install scripts (native binaries for wrangler and Vite).
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: true

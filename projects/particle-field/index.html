@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Particle Field</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #07070a; overflow: hidden; }
+      canvas { display: block; touch-action: none; }
+      .hud { position: fixed; left: 16px; bottom: 16px; color: #e9e4da; font: 13px ui-monospace, Menlo, monospace; opacity: 0.7; }
+      .hud a { color: inherit; text-decoration: none; margin-right: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="hud"><a href="/">← lab</a><span>drag to orbit · scroll to zoom · click to pulse</span></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

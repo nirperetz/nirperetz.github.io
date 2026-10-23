@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "aninir-web",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Reached only through the edge Worker.
+  "workers_dev": false,
+  "assets": { "binding": "ASSETS", "directory": "./dist/client" },
+  "services": [{ "binding": "API", "service": "aninir-api" }]
+}

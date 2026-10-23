@@ -1,0 +1,10 @@
+{
+  "extends": ["astro/tsconfigs/strictest", "../../tsconfig.base.json"],
+  "compilerOptions": {
+    // Server code runs on Workers, so Workers types instead of the DOM ones.
+    "lib": ["es2024"],
+    "types": ["@cloudflare/workers-types"]
+  },
+  "include": [".astro/types.d.ts", "src"],
+  "exclude": ["dist"]
+}

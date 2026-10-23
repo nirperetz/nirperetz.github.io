@@ -1,0 +1,17 @@
+{
+  "name": "@aninir/lab-cli",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "lab": "./src/cli.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@aninir/lab-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5"
+  }
+}

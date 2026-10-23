@@ -1,0 +1,53 @@
+name: lab-deploy
+
+# Reusable: lets a project in another repository deploy to aninir.com/lab.
+#
+#   jobs:
+#     deploy:
+#       uses: nirperetz/nirperetz.github.io/.github/workflows/lab-deploy.yml@master
+#       with:
+#         build-command: npm ci && npm run build
+#       secrets:
+#         LAB_DEPLOY_TOKEN: ${{ secrets.LAB_DEPLOY_TOKEN }}
+on:
+  workflow_call:
+    inputs:
+      project-dir:
+        description: Folder containing lab.json, relative to the calling repo
+        type: string
+        default: .
+      build-command:
+        description: Shell command that produces the output folder (empty = no build)
+        type: string
+        default: ""
+      lab-api:
+        type: string
+        default: https://aninir.com
+    secrets:
+      LAB_DEPLOY_TOKEN:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: nirperetz/nirperetz.github.io
+          path: .lab-platform
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .lab-platform/.node-version
+      - name: Build
+        if: inputs.build-command != ''
+        working-directory: ${{ inputs.project-dir }}
+        run: ${{ inputs.build-command }}
+      - name: Install the lab CLI
+        working-directory: .lab-platform
+        run: corepack enable && pnpm install --frozen-lockfile --filter @aninir/lab-cli...
+      - name: Deploy
+        env:
+          LAB_API: ${{ inputs.lab-api }}
+          LAB_DEPLOY_TOKEN: ${{ secrets.LAB_DEPLOY_TOKEN }}
+        run: node .lab-platform/packages/lab-cli/src/cli.ts deploy "${{ inputs.project-dir }}"
