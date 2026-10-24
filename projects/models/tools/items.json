@@ -64,7 +64,8 @@
   },
   {
     "id": "knight",
-    "src": "/Volumes/T7/02_Projects/FridayLab/sprint3/character/HW_knight_02_nir_uv_animation_test.blend"
+    "src": "/Volumes/T7/02_Projects/FridayLab/sprint3/character/HW_knight_02_nir_uv_animation_test.blend",
+    "unhide": ["Armature"]
   },
   {
     "id": "skin-character",
