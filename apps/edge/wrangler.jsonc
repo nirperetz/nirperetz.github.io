@@ -16,7 +16,7 @@
       "binding": "DB",
       "database_name": "aninir",
       // Same database as apps/api. Read-only here.
-      "database_id": "00000000-0000-0000-0000-000000000000"
+      "database_id": "5ee9107f-da47-4487-a179-9bed958b3341"
     }
   ],
   "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab" }]

@@ -10,8 +10,7 @@
     {
       "binding": "DB",
       "database_name": "aninir",
-      // Replace with the id printed by `wrangler d1 create aninir`.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "5ee9107f-da47-4487-a179-9bed958b3341",
       "migrations_dir": "migrations"
     }
   ],
