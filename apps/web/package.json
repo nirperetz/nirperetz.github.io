@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "deploy": "astro build && wrangler deploy",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

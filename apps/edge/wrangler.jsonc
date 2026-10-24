@@ -1,5 +1,7 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
+  // Top level = production (master → aninir.com). `env` holds staging and dev.
+  // Bindings don't inherit in wrangler, so every environment lists its own.
   "name": "aninir-edge",
   "main": "src/index.ts",
   "compatibility_date": "2026-10-01",
@@ -19,6 +21,45 @@
       "database_id": "5ee9107f-da47-4487-a179-9bed958b3341"
     }
   ],
-  "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab" }]
+  "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab" }],
   // Secret: PREVIEW_TOKEN, unlocks draft projects via ?preview=<token>.
+
+  "env": {
+    "staging": {
+      "name": "aninir-edge-staging",
+      "workers_dev": false,
+      "routes": [{ "pattern": "staging.aninir.com", "custom_domain": true }],
+      "vars": { "NOINDEX": "1" },
+      "services": [
+        { "binding": "WEB", "service": "aninir-web-staging" },
+        { "binding": "API", "service": "aninir-api-staging" }
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "aninir-staging",
+          "database_id": "1f4e1355-a44e-42c5-85ea-c1afe3f4817e"
+        }
+      ],
+      "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab-staging" }]
+    },
+    "dev": {
+      "name": "aninir-edge-dev",
+      "workers_dev": false,
+      "routes": [{ "pattern": "dev.aninir.com", "custom_domain": true }],
+      "vars": { "NOINDEX": "1" },
+      "services": [
+        { "binding": "WEB", "service": "aninir-web-dev" },
+        { "binding": "API", "service": "aninir-api-dev" }
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "aninir-dev",
+          "database_id": "915273a2-7466-4a8d-8f85-9d96c4fd2964"
+        }
+      ],
+      "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab-dev" }]
+    }
+  }
 }

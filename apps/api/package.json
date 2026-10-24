@@ -7,7 +7,6 @@
   },
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler d1 migrations apply aninir --remote && wrangler deploy",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

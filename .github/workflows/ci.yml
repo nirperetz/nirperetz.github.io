@@ -3,7 +3,7 @@ name: ci
 on:
   pull_request:
   push:
-    branches: [master, platform]
+    branches: [master, staging, dev, platform]
 
 jobs:
   check:

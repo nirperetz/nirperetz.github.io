@@ -1,5 +1,7 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
+  // Top level = production. Pick another environment at build time:
+  // CLOUDFLARE_ENV=staging astro build, then `wrangler deploy` (the built config is already flattened).
   "name": "aninir-web",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-10-01",
@@ -7,5 +9,18 @@
   // Reached only through the edge Worker.
   "workers_dev": false,
   "assets": { "binding": "ASSETS", "directory": "./dist/client" },
-  "services": [{ "binding": "API", "service": "aninir-api" }]
+  "services": [{ "binding": "API", "service": "aninir-api" }],
+
+  "env": {
+    "staging": {
+      "name": "aninir-web-staging",
+      "workers_dev": false,
+      "services": [{ "binding": "API", "service": "aninir-api-staging" }]
+    },
+    "dev": {
+      "name": "aninir-web-dev",
+      "workers_dev": false,
+      "services": [{ "binding": "API", "service": "aninir-api-dev" }]
+    }
+  }
 }

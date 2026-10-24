@@ -12,11 +12,22 @@ interface Env {
   DB: D1Database;
   LAB_BUCKET: R2Bucket;
   PREVIEW_TOKEN?: string;
+  /** Set on staging and dev, so search engines never index them. */
+  NOINDEX?: string;
 }
 
 const PREVIEW_COOKIE = "lab_preview";
 
 const app = new Hono<{ Bindings: Env }>();
+
+app.use(async (c, next) => {
+  await next();
+  if (!c.env.NOINDEX) return;
+  // Responses from bindings have immutable headers, so copy before adding one.
+  const res = new Response(c.res.body, c.res);
+  res.headers.set("x-robots-tag", "noindex");
+  c.res = res;
+});
 
 // www → apex, and old 2014 URLs → their new homes. Both permanent.
 app.use(async (c, next) => {

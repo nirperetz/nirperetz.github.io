@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "deploy": "wrangler deploy",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

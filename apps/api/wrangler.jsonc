@@ -1,5 +1,6 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
+  // Top level = production. `env` holds staging and dev (see apps/edge/wrangler.jsonc).
   "name": "aninir-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-10-01",
@@ -14,6 +15,35 @@
       "migrations_dir": "migrations"
     }
   ],
-  "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab" }]
+  "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab" }],
   // Secret: LAB_DEPLOY_TOKEN (`wrangler secret put LAB_DEPLOY_TOKEN`, or .dev.vars locally).
+
+  "env": {
+    "staging": {
+      "name": "aninir-api-staging",
+      "workers_dev": false,
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "aninir-staging",
+          "database_id": "1f4e1355-a44e-42c5-85ea-c1afe3f4817e",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab-staging" }]
+    },
+    "dev": {
+      "name": "aninir-api-dev",
+      "workers_dev": false,
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "aninir-dev",
+          "database_id": "915273a2-7466-4a8d-8f85-9d96c4fd2964",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "r2_buckets": [{ "binding": "LAB_BUCKET", "bucket_name": "aninir-lab-dev" }]
+    }
+  }
 }
