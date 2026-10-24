@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "cg-raytracer",
+  "title": "Ray Tracer",
+  "visibility": "listed",
+  "kind": "shader",
+  "description": "A 2013 C++ ray tracer (soft shadows, glass, reflections, textures) rebuilt as a progressive GPU tracer: one path per pixel per frame, refining while you hold still.",
+  "tags": ["three.js", "glsl", "ray tracing", "huji cg"],
+  "year": 2013,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}

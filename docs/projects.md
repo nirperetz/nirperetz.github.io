@@ -96,3 +96,19 @@ jobs:
 | `thread-mandelbrot`   | `crossOriginIsolated: true`: Web Workers sharing one `SharedArrayBuffer`.                    |
 | `palette-router`      | `spa: true`: real deep links like `/lab/palette-router/p/ff5e3a`.                            |
 | `archive`             | The 2014 site, untouched, unlisted. Old URLs redirect into it.                               |
+
+## The HUJI CG ports
+
+Exercises from the Hebrew University computer graphics course (2012–13, C++, GLUT,
+OpenMesh), rebuilt on three.js with Vite and TypeScript. The algorithms are the
+course's own (arcball, Catmull-Clark, Phong, the ray tracer), not three.js
+built-ins; three.js supplies the WebGL plumbing. Sources: `/Volumes/T7/01_School/HUJI/cg`.
+
+| Project        | From                    | Notes                                                                                                                      |
+| -------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `cg-breakout`  | `CGEx1` (2012)          | Circular Breakout. The exercise was unfinished; its planned brick kinds (slow, triple, magnet, passive) now work.          |
+| `cg-mesh-lab`  | `cge1` + `CGEx3` (2013) | OFF/OBJ viewer: Shoemake arcball, the course shaders in GLSL ES 3.0, two-sided lighting, Catmull-Clark with the morph.     |
+| `cg-raytracer` | `CGEx4` (2013)          | The recursive CPU tracer as a progressive GPU path: one stochastic branch per hit, averaged over frames. Both scenes kept. |
+
+Thumbnails are captured from the running page with headless Chrome over CDP
+(`Page.captureScreenshot`, WebP, 640×400).

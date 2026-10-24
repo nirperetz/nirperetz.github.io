@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mesh Lab</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+      canvas { display: block; touch-action: none; }
+      /* The arcball, drawn as in the exercise: a circle at 80% of the viewport. */
+      #ball { position: fixed; left: 50%; top: 50%; width: 80vmin; height: 80vmin; translate: -50% -50%; border: 1px solid rgb(255 255 255 / 0.14); border-radius: 50%; pointer-events: none; transition: border-color 0.2s; }
+      #ball.light { border-color: rgb(255 214 120 / 0.55); }
+      .foot { position: fixed; left: 16px; right: 16px; bottom: 16px; color: #e9e4da; font: 13px ui-monospace, Menlo, monospace; opacity: 0.7; pointer-events: none; }
+      .foot a { color: inherit; text-decoration: none; margin-right: 12px; pointer-events: auto; }
+      #toast { position: fixed; left: 50%; top: 20px; translate: -50% 0; color: #f2efe8; font: 13px ui-monospace, Menlo, monospace; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="ball"></div>
+    <div id="toast"></div>
+    <div class="foot">
+      <a href="/">← lab</a>
+      <span>drag to rotate · right-drag to pan · wheel to zoom · s subdivide · m move light · drop an .off/.obj</span>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

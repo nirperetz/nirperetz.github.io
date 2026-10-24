@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "cg-mesh-lab",
+  "title": "Mesh Lab",
+  "visibility": "listed",
+  "kind": "3d",
+  "description": "Arcball mesh viewer with the course's GLSL shaders (Phong, Gouraud, toon, rings) and animated Catmull-Clark subdivision. 2013 OpenGL exercises, ported to three.js.",
+  "tags": ["three.js", "glsl", "subdivision", "huji cg"],
+  "year": 2013,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}

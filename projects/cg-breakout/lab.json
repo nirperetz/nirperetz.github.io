@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "cg-breakout",
+  "title": "Polar Breakout",
+  "visibility": "listed",
+  "kind": "game",
+  "description": "Breakout on a disc: rings of bricks, a paddle riding the rim. A 2012 OpenGL/GLUT course exercise, finished and ported to three.js.",
+  "tags": ["three.js", "game", "huji cg"],
+  "year": 2012,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}

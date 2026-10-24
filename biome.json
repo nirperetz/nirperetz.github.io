@@ -5,6 +5,7 @@
     "includes": [
       "**",
       "!.claude",
+      "!pnpm-lock.yaml",
       "!projects/archive",
       "!projects/let-the-sunshine-in",
       "!**/*.astro"

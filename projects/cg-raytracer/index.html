@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ray Tracer</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+      canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+      #original { position: fixed; right: 16px; bottom: 48px; width: min(36vmin, 320px); border: 1px solid rgb(255 255 255 / 0.25); }
+      .foot { position: fixed; left: 16px; bottom: 16px; color: #e9e4da; font: 13px ui-monospace, Menlo, monospace; opacity: 0.7; pointer-events: none; }
+      .foot a { color: inherit; text-decoration: none; margin-right: 12px; pointer-events: auto; }
+    </style>
+  </head>
+  <body>
+    <img id="original" src="./original-2013.jpg" alt="The original 2013 CPU render, 1000×1000" hidden />
+    <div class="foot">
+      <a href="/">← lab</a>
+      <span>drag to orbit · scroll to zoom · the image refines while you hold still</span>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
