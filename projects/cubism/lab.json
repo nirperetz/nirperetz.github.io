@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "cubism",
+  "title": "Cubism",
+  "visibility": "listed",
+  "kind": "3d",
+  "description": "A still life you can walk around, painted cubist: each object is seen from nine points of view at once, on tiles that shift as you look. 2013 final project, ported to three.js.",
+  "tags": ["three.js", "glsl", "render-to-texture", "huji games"],
+  "year": 2013,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}

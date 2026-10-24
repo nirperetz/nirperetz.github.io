@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "corridor",
+  "title": "Corridor",
+  "visibility": "listed",
+  "kind": "interactive",
+  "description": "An endless dark corridor and a dying flashlight, seen through a post-processing pass: any 4×4 kernel, glow, posterize, blink, double vision, motion blur. A 2013 OpenGL/Cg course exercise, ported to three.js.",
+  "tags": ["three.js", "glsl", "post-processing", "huji games"],
+  "year": 2013,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}

@@ -110,5 +110,17 @@ built-ins; three.js supplies the WebGL plumbing. Sources: `/Volumes/T7/01_School
 | `cg-mesh-lab`  | `cge1` + `CGEx3` (2013) | OFF/OBJ viewer: Shoemake arcball, the course shaders in GLSL ES 3.0, two-sided lighting, Catmull-Clark with the morph.     |
 | `cg-raytracer` | `CGEx4` (2013)          | The recursive CPU tracer as a progressive GPU path: one stochastic branch per hit, averaged over frames. Both scenes kept. |
 
+From the computer games course (2013, C++, GLFW, Cg): `/Volumes/T7/01_School/HUJI/משחקי מחשב`.
+These were shown on the 2014 site as videos (`archive/corridor.html`, `island.html`,
+`cubism.html`); now they run.
+
+| Project    | From                           | Notes                                                                                                                                   |
+| ---------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `corridor` | `liri`, `postp` (ex2–3)        | Scrolling-texture corridor, flickering spotlight, and the post pass: any 4×4 kernel plus glow, posterize, blink, dizzy, motion blur.    |
+| `island`   | `myIsland`                     | Midpoint-displacement terrain on the CPU (was a geometry shader with transform feedback), reflective sea, caustics, GPU-only particles. |
+| `cubism`   | `final` (ex6, from Ex6.tar.gz) | Seven objects × nine render targets per frame, shown on jittered billboard tiles, then a canvas-and-sepia painting pass.                |
+
+Not ported: `asaf-cake`, `assaf`, `assafIsland` (Asaf Geva's work), and the course tutorials.
+
 Thumbnails are captured from the running page with headless Chrome over CDP
 (`Page.captureScreenshot`, WebP, 640×400).

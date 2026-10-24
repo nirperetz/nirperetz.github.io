@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "island",
+  "title": "Island",
+  "visibility": "listed",
+  "kind": "3d",
+  "description": "A lone island, generated anew on every visit: subdivided terrain, a sea that reflects the sky, caustics, rain and a slowly forming tornado. A 2013 OpenGL/Cg course project, ported to three.js.",
+  "tags": ["three.js", "glsl", "procedural", "particles", "huji games"],
+  "year": 2013,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}
