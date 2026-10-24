@@ -22,19 +22,19 @@ web export, Emscripten output, a React app.
 }
 ```
 
-| Field | Default | Meaning |
-|---|---|---|
-| `slug` | required | URL name, kebab-case, unique. |
-| `title` | required | Shown in the gallery. |
-| `visibility` | required | `listed` (in the gallery), `unlisted` (URL only, noindex), `draft` (needs the preview token). |
-| `kind` | `interactive` | Free text. Suggested: `3d`, `shader`, `game`, `app`, `interactive`, `archive`. The gallery filters by it. |
-| `description`, `tags`, `year` | empty | Gallery card details. |
-| `thumbnail` | none | Path inside the output. Without one, the card gets a color swatch. |
-| `entry` | `index.html` | The page served at `/lab/<slug>/`. |
-| `spa` | `false` | Unknown paths without an extension serve `entry`, with a `<base href>` set to the project root. For apps with client-side routing. |
-| `crossOriginIsolated` | `false` | Sends COOP/COEP headers so `SharedArrayBuffer` works. Needed for threaded WASM (Emscripten pthreads, Unity, Godot 4). |
-| `outDir` | `.` | Folder to upload, relative to lab.json. Build-time only. |
-| `exclude` | `[]` | Extra paths to skip: `dir/**`, `*.ext` or an exact path. `node_modules`, dotfiles, `package.json`, lockfiles and `tsconfig.json` are always skipped. |
+| Field                         | Default       | Meaning                                                                                                                                              |
+| ----------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `slug`                        | required      | URL name, kebab-case, unique.                                                                                                                        |
+| `title`                       | required      | Shown in the gallery.                                                                                                                                |
+| `visibility`                  | required      | `listed` (in the gallery), `unlisted` (URL only, noindex), `draft` (needs the preview token).                                                        |
+| `kind`                        | `interactive` | Free text. Suggested: `3d`, `shader`, `game`, `app`, `interactive`, `archive`. The gallery filters by it.                                            |
+| `description`, `tags`, `year` | empty         | Gallery card details.                                                                                                                                |
+| `thumbnail`                   | none          | Path inside the output. Without one, the card gets a color swatch.                                                                                   |
+| `entry`                       | `index.html`  | The page served at `/lab/<slug>/`.                                                                                                                   |
+| `spa`                         | `false`       | Unknown paths without an extension serve `entry`, with a `<base href>` set to the project root. For apps with client-side routing.                   |
+| `crossOriginIsolated`         | `false`       | Sends COOP/COEP headers so `SharedArrayBuffer` works. Needed for threaded WASM (Emscripten pthreads, Unity, Godot 4).                                |
+| `outDir`                      | `.`           | Folder to upload, relative to lab.json. Build-time only.                                                                                             |
+| `exclude`                     | `[]`          | Extra paths to skip: `dir/**`, `*.ext` or an exact path. `node_modules`, dotfiles, `package.json`, lockfiles and `tsconfig.json` are always skipped. |
 
 Editors autocomplete these fields through `$schema`. The schema is generated
 from `packages/lab-core/src/manifest.ts` with
@@ -87,12 +87,12 @@ jobs:
 
 ## The examples
 
-| Project | Shows |
-|---|---|
-| `shader-garden` | No build step at all: an HTML file, a JS file, raw WebGL2. |
-| `particle-field` | A Vite + TypeScript build with modern three.js, `outDir: "dist"`. |
+| Project               | Shows                                                                                        |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| `shader-garden`       | No build step at all: an HTML file, a JS file, raw WebGL2.                                   |
+| `particle-field`      | A Vite + TypeScript build with modern three.js, `outDir: "dist"`.                            |
 | `let-the-sunshine-in` | A 2019 piece on three.js r104, served as it was. Old and new three.js versions side by side. |
-| `orbit-dodge` | A game, `visibility: "unlisted"`: works by URL, not in the gallery. |
-| `thread-mandelbrot` | `crossOriginIsolated: true`: Web Workers sharing one `SharedArrayBuffer`. |
-| `palette-router` | `spa: true`: real deep links like `/lab/palette-router/p/ff5e3a`. |
-| `archive` | The 2014 site, untouched, unlisted. Old URLs redirect into it. |
+| `orbit-dodge`         | A game, `visibility: "unlisted"`: works by URL, not in the gallery.                          |
+| `thread-mandelbrot`   | `crossOriginIsolated: true`: Web Workers sharing one `SharedArrayBuffer`.                    |
+| `palette-router`      | `spa: true`: real deep links like `/lab/palette-router/p/ff5e3a`.                            |
+| `archive`             | The 2014 site, untouched, unlisted. Old URLs redirect into it.                               |

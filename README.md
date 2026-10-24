@@ -2,7 +2,6 @@
 
 A lab for experiments: 3D, shaders, games, interactive pieces and apps.
 The website and API live here; each project is a folder with a `lab.json`.
-
 - [docs/architecture.md](docs/architecture.md): how it fits together, with diagrams
 - [docs/projects.md](docs/projects.md): how to add and deploy a project
 
