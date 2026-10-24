@@ -54,6 +54,9 @@ jobs:
         run: |
           if [ -n "$REQUESTED" ]; then
             dirs="$REQUESTED"
+          elif ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            # New branch (BEFORE is all zeros) or rewritten history: deploy every project.
+            dirs=$(ls projects)
           else
             dirs=$(git diff --name-only "$BEFORE" HEAD -- projects | cut -d/ -f2 | sort -u)
           fi
