@@ -6,6 +6,7 @@
       "**",
       "!.claude",
       "!pnpm-lock.yaml",
+      "!**/public/draco",
       "!projects/archive",
       "!projects/let-the-sunshine-in",
       "!**/*.astro"

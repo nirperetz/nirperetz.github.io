@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aninir.com/schemas/lab.json",
+  "slug": "models",
+  "title": "Models",
+  "visibility": "listed",
+  "kind": "3d",
+  "description": "A viewer for my 3D work since 2016: characters, animation, props and print models from Maya and Blender, converted to compressed glTF.",
+  "tags": ["three.js", "gltf", "blender", "maya"],
+  "year": 2026,
+  "thumbnail": "thumb.webp",
+  "outDir": "dist"
+}

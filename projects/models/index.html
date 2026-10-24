@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Models</title>
+    <style>
+      :root { --bg: #16161a; --panel: #1d1d22; --line: #2c2c33; --text: #ece8e1; --muted: #8d8a85; --accent: #e8b86a; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 14px/1.4 ui-sans-serif, system-ui, sans-serif; overflow: hidden; }
+      body { display: grid; grid-template-columns: 260px 1fr; height: 100dvh; }
+      aside { background: var(--panel); border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+      aside header { padding: 16px 16px 10px; }
+      aside header a { color: var(--muted); text-decoration: none; font: 12px ui-monospace, Menlo, monospace; }
+      aside h1 { font-size: 18px; font-weight: 600; margin: 8px 0 2px; }
+      aside p { margin: 0; color: var(--muted); font-size: 12px; }
+      #list { overflow-y: auto; padding: 6px 8px 16px; display: flex; flex-direction: column; gap: 2px; }
+      .item { all: unset; cursor: pointer; padding: 8px 10px; border-radius: 6px; display: flex; flex-direction: column; }
+      .item small { color: var(--muted); font-size: 11px; }
+      .item:hover { background: #26262c; }
+      .item.on { background: #2e2a22; box-shadow: inset 2px 0 0 var(--accent); }
+      #stage { position: relative; min-width: 0; min-height: 0; }
+      canvas { display: block; touch-action: none; }
+      .info { position: absolute; left: 20px; top: 16px; pointer-events: none; }
+      .info h2 { margin: 0; font-size: 22px; font-weight: 600; }
+      .info div { color: var(--muted); font-size: 13px; }
+      #stats { font: 12px ui-monospace, Menlo, monospace; margin-top: 6px; }
+      .tools { position: absolute; right: 16px; top: 16px; display: flex; gap: 6px; }
+      .tools button { background: #22222899; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font: 12px ui-monospace, Menlo, monospace; cursor: pointer; backdrop-filter: blur(6px); }
+      .tools button.on { border-color: var(--accent); color: var(--accent); }
+      @media (max-width: 720px) {
+        body { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+        aside { grid-row: 2; border-right: 0; border-top: 1px solid var(--line); }
+        aside header { display: none; }
+        #list { flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 8px; }
+        .item { flex: 0 0 auto; }
+        .info { left: 16px; top: 12px; }
+        .info h2 { font-size: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <header>
+        <a href="/">← lab</a>
+        <h1>Models</h1>
+        <p>Characters, props and prints from Maya and Blender, 2016–2024</p>
+      </header>
+      <nav id="list"></nav>
+    </aside>
+    <main id="stage">
+      <div class="info">
+        <h2 id="title">Models</h2>
+        <div id="meta"></div>
+        <div id="note"></div>
+        <div id="stats"></div>
+      </div>
+      <div class="tools">
+        <button type="button" id="play" hidden>pause</button>
+        <button type="button" id="clay">clay</button>
+        <button type="button" id="wire">wire</button>
+      </div>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

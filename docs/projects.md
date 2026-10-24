@@ -122,5 +122,9 @@ These were shown on the 2014 site as videos (`archive/corridor.html`, `island.ht
 
 Not ported: `asaf-cake`, `assaf`, `assafIsland` (Asaf Geva's work), and the course tutorials.
 
+`models` is a viewer for the 3D work on the T7 drive (Maya and Blender, 2016–2024): 19
+models converted to Draco GLB by headless Blender. The pipeline is in
+`projects/models/tools/` and described in `projects/models/README.md`.
+
 Thumbnails are captured from the running page with headless Chrome over CDP
 (`Page.captureScreenshot`, WebP, 640×400).

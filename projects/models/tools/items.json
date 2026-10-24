@@ -1,0 +1,109 @@
+[
+  {
+    "id": "yona",
+    "src": "/Volumes/T7/03_3D_and_Printing/Maya_to_Blender/Yona.blend"
+  },
+  {
+    "id": "yona-expressions",
+    "src": "/Volumes/T7/03_3D_and_Printing/Maya_to_Blender/YonaExportedToBlender/yona_face_expressions_blink_+_surprise.blend",
+    "bake": "meshcache",
+    "step": 2
+  },
+  {
+    "id": "yona-print",
+    "src": "/Volumes/T7/03_3D_and_Printing/3d_stuff/maya_to_blender/YonaExportedToBlender/yona_for print.blend"
+  },
+  {
+    "id": "nir-head",
+    "src": "/Volumes/T7/03_3D_and_Printing/Maya_to_Blender/nir_3d_model_close.obj",
+    "clay": true
+  },
+  {
+    "id": "chair",
+    "src": "/Volumes/T7/02_Projects/Aninir/Chair/chair_012.blend",
+    "tris": 80000,
+    "hide": ["Plane"]
+  },
+  {
+    "id": "donut",
+    "src": "/Volumes/T7/02_Projects/Aninir/Donut/HelloDonut_008.blend",
+    "tris": 120000,
+    "realize": true
+  },
+  {
+    "id": "dreidel",
+    "src": "/Volumes/T7/02_Projects/Aninir/Dreidel/dreidel.blend"
+  },
+  {
+    "id": "dreidel-2021",
+    "src": "/Volumes/T7/03_3D_and_Printing/3d_stuff/draidel.blend",
+    "tris": 120000
+  },
+  {
+    "id": "tools",
+    "src": "/Volumes/T7/02_Projects/Aninir/Tools/tools.blend"
+  },
+  {
+    "id": "broog",
+    "src": "/Volumes/T7/02_Projects/Aninir/Broog/broog004.blend",
+    "relink": {
+      "broog.png": "/Volumes/T7/02_Projects/Aninir/broog.png"
+    }
+  },
+  {
+    "id": "nir-relief",
+    "src": "/Volumes/T7/02_Projects/Aninir/Nir/nir.stl",
+    "tris": 200000,
+    "clay": true
+  },
+  {
+    "id": "worldcup",
+    "src": "/Volumes/T7/03_3D_and_Printing/WorldCup_Trophy/worldcup.blend",
+    "tris": 180000,
+    "unhide": ["WorldCup_386.001", "WorldCup_386.002", "WorldCup_386.003"]
+  },
+  {
+    "id": "knight",
+    "src": "/Volumes/T7/02_Projects/FridayLab/sprint3/character/HW_knight_02_nir_uv_animation_test.blend"
+  },
+  {
+    "id": "skin-character",
+    "src": "/Volumes/T7/02_Projects/FridayLab/sprint3/character/NewChar/newSkinChar_armature_two_sides_shapes_pose.blend",
+    "clay": true
+  },
+  {
+    "id": "gone",
+    "src": "/Volumes/T7/02_Projects/FridayLab/GoneSkin1.blend"
+  },
+  {
+    "id": "bullet",
+    "src": "/Volumes/T7/02_Projects/FridayLab/Yotam bullet.blend"
+  },
+  {
+    "id": "bouncing-cubes",
+    "src": "/Volumes/T7/03_3D_and_Printing/Blender_Files/bouncingCube.blend",
+    "animMode": "SCENE"
+  },
+  {
+    "id": "mani",
+    "src": "/Volumes/T7/03_3D_and_Printing/Maya_to_Blender/mani.abc",
+    "bake": "transforms",
+    "animMode": "SCENE",
+    "clay": true
+  },
+  {
+    "id": "whip",
+    "src": "/Volumes/T7/03_3D_and_Printing/Maya_to_Blender/whip.abc",
+    "bake": "transforms",
+    "animMode": "SCENE",
+    "clay": true
+  },
+  {
+    "id": "pantomime",
+    "src": "/Volumes/T7/03_3D_and_Printing/Maya_to_Blender/pantomime2.abc",
+    "bake": "transforms",
+    "animMode": "SCENE",
+    "step": 2,
+    "clay": true
+  }
+]
