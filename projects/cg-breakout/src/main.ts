@@ -1,4 +1,5 @@
 import {
+  CanvasTexture,
   CircleGeometry,
   Color,
   Group,
@@ -15,59 +16,82 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
-import { BALL_R, type Brick, Game, type Kind, PADDLE_R0, PADDLE_R1 } from "./game.ts";
+import { BALL_R, type Brick, Game, type Kind, RIM_R0, RIM_R1, WALLS } from "./game.ts";
 
-const COLORS: Record<Kind, string> = {
-  regular: "#ff5a3c",
-  slow: "#3cc8ff",
-  triple: "#ff3cc8",
-  magnet: "#ffd23c",
-  passive: "#5a5a66",
+// The original colors: blue-to-cyan rings (R = 0.18·ring, G = 0.3 + 0.05·j,
+// B = 0.7 + 0.01·j), specials in shades of red, pale cyan walls, teal paddles that turn
+// red while magnetized and fade back as the magnet runs out.
+const SPECIAL: Record<Exclude<Kind, "regular">, Color> = {
+  magnet: new Color(1, 0, 0),
+  enlarge: new Color(1, 0.2, 0.2),
+  shrink: new Color(1, 0.1, 0.1),
 };
-// Regular bricks shade from hot (inner) to cool (outer) rings.
-const RING_TINT = ["#ff4630", "#ff7a2e", "#ffa936", "#ffd05a", "#c8e070", "#78d8a0"];
+const PADDLE = new Color(0, 0.5, 0.5);
+const MAGNET = new Color(1, 0, 0);
 
 const renderer = new WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 document.body.prepend(renderer.domElement);
 
 const scene = new Scene();
-scene.background = new Color("#07070a");
+scene.background = new Color("#000000");
 const camera = new OrthographicCamera(-1, 1, 1, -1, -1, 1);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new Vector2(1, 1), 0.35, 0.25, 0.55);
-composer.addPass(bloom);
+composer.addPass(new UnrealBloomPass(new Vector2(1, 1), 0.3, 0.25, 0.6));
 composer.addPass(new OutputPass());
 
 const game = new Game();
 
-// Static pieces: the rim the paddle rides on.
-const rim = new Mesh(
-  new RingGeometry(PADDLE_R1 + 0.012, PADDLE_R1 + 0.016, 256),
-  new MeshBasicMaterial({ color: "#2a2a35" }),
+for (const w of WALLS) {
+  scene.add(
+    new Mesh(
+      new RingGeometry(RIM_R0, RIM_R1, 32, 1, w.a0, w.len),
+      new MeshBasicMaterial({ color: new Color(0.6, 0.85, 0.85) }),
+    ),
+  );
+}
+
+const paddleMat = new MeshBasicMaterial({ color: PADDLE.clone() });
+const paddles = [0, 1].map(() => {
+  const m = new Mesh(new RingGeometry(RIM_R0, RIM_R1, 48, 1, -0.5, 1), paddleMat);
+  scene.add(m);
+  return m;
+});
+let paddleHalf = -1;
+
+// The ball: ten stacked discs from red to black, each smaller and shifted, so it looks
+// lit from one side. A radial gradient does the same in one texture.
+const ballCanvas = document.createElement("canvas");
+ballCanvas.width = ballCanvas.height = 64;
+const g = ballCanvas.getContext("2d") as CanvasRenderingContext2D;
+const grad = g.createRadialGradient(40, 24, 2, 32, 32, 32);
+grad.addColorStop(0, "#ff0000");
+grad.addColorStop(1, "#000000");
+g.fillStyle = grad;
+g.beginPath();
+g.arc(32, 32, 32, 0, Math.PI * 2);
+g.fill();
+const ball = new Mesh(
+  new CircleGeometry(BALL_R, 32),
+  new MeshBasicMaterial({ map: new CanvasTexture(ballCanvas), transparent: true }),
 );
-scene.add(rim);
+scene.add(ball);
 
-const paddleMat = new MeshBasicMaterial({ color: "#f2efe8" });
-const paddle = new Mesh(
-  new RingGeometry(PADDLE_R0, PADDLE_R1, 48, 1, -game.paddleHalf, game.paddleHalf * 2),
-  paddleMat,
-);
-scene.add(paddle);
-
-const ballGeo = new CircleGeometry(BALL_R, 32);
-const ballMat = new MeshBasicMaterial({ color: "#fff4ec" });
-const balls = new Group();
-scene.add(balls);
-
-// Brick meshes are rebuilt per level; each sits at angle 0 and is rotated into place,
-// so a spinning ring only updates rotation.z.
 const bricks = new Group();
 scene.add(bricks);
 const brickMeshes = new Map<number, Mesh>();
 const dying: { mesh: Mesh; t: number }[] = [];
+
+function baseColor(b: Brick) {
+  if (b.kind !== "regular") return SPECIAL[b.kind];
+  return new Color(
+    0.18 * b.ring,
+    Math.min(1, 0.3 + 0.05 * b.index),
+    Math.min(1, 0.7 + 0.01 * b.index),
+  );
+}
 
 function buildBricks() {
   for (const m of brickMeshes.values()) {
@@ -77,11 +101,11 @@ function buildBricks() {
   bricks.clear();
   brickMeshes.clear();
   for (const b of game.bricks) {
-    const color = b.kind === "regular" ? (RING_TINT[b.ring] ?? COLORS.regular) : COLORS[b.kind];
     const mesh = new Mesh(
-      new RingGeometry(b.r0, b.r1, Math.max(6, Math.ceil(b.len * 40)), 1, 0, b.len),
-      new MeshBasicMaterial({ color, transparent: true }),
+      new RingGeometry(b.r0, b.r1, Math.max(8, Math.ceil(b.len * 40)), 1, b.a0, b.len),
+      new MeshBasicMaterial({ color: baseColor(b), transparent: true }),
     );
+    mesh.userData.base = baseColor(b);
     bricks.add(mesh);
     brickMeshes.set(b.id, mesh);
   }
@@ -102,29 +126,35 @@ function message(text: string) {
   hud.msg.style.opacity = text ? "1" : "0";
 }
 
-// Input: the pointer's angle around the center steers the paddle; click or space serves.
+// Input: a/d (or arrows) turn both paddles, as in the original; on touch or mouse the
+// pointer's angle steers the bottom paddle. Space or a click serves and releases the
+// magnet; r restarts.
 const keys = new Set<string>();
 addEventListener("keydown", (e) => {
-  keys.add(e.key.toLowerCase());
-  if (e.key === " ") {
+  const k = e.key.toLowerCase();
+  keys.add(k);
+  if (k === " ") {
     e.preventDefault();
     game.launch();
   }
+  if (k === "r") game.restart();
 });
 addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
-renderer.domElement.addEventListener("pointermove", (e) => {
+addEventListener("blur", () => keys.clear());
+const canvas = renderer.domElement;
+canvas.addEventListener("pointermove", (e) => {
   const x = e.clientX - innerWidth / 2;
   const y = innerHeight / 2 - e.clientY;
-  if (Math.hypot(x, y) > 8) game.aim(Math.atan2(y, x));
+  game.aim(Math.hypot(x, y) > 8 ? Math.atan2(y, x) : null);
 });
-renderer.domElement.addEventListener("pointerdown", (e) => {
-  renderer.domElement.dispatchEvent(new PointerEvent("pointermove", e));
+canvas.addEventListener("pointerdown", (e) => {
+  canvas.dispatchEvent(new PointerEvent("pointermove", e));
   game.launch();
 });
 
 function resize() {
   const aspect = innerWidth / innerHeight;
-  const s = 1.08;
+  const s = 1.06;
   camera.left = -s * Math.max(aspect, 1);
   camera.right = s * Math.max(aspect, 1);
   camera.top = s / Math.min(aspect, 1);
@@ -139,29 +169,35 @@ buildBricks();
 
 const timer = new Timer();
 timer.connect(document);
+const tint = new Color();
 renderer.setAnimationLoop((time) => {
   timer.update(time);
   const dt = Math.min(timer.getDelta(), 1 / 30);
-  // As in the original, d turns the paddle counter-clockwise: rightward at the bottom.
-  const kb =
+  // a turns the paddles clockwise (paddleSpeed = -3°), d counter-clockwise.
+  const turn =
     (keys.has("d") || keys.has("arrowright") ? 1 : 0) -
     (keys.has("a") || keys.has("arrowleft") ? 1 : 0);
-  game.nudge(kb, dt);
-  game.step(dt);
+  game.step(dt, turn);
 
   for (const e of game.events.splice(0)) {
     if (e.type === "break") shatter(e.brick);
     else if (e.type === "level") {
       buildBricks();
-      message(e.level === 1 ? "click or space to serve" : `level ${e.level}`);
+      message(e.level === 1 ? "click or space to serve" : `level ${e.level} · click or space`);
     } else if (e.type === "lost" && !game.over) message("click or space to serve");
     else if (e.type === "over") message(`game over · ${game.score} · click to restart`);
   }
-  if (game.balls.some((b) => b.held === null)) message("");
+  if (!game.serving && !game.over) message(game.stuck !== null ? "space or click to release" : "");
 
-  for (const b of game.bricks) {
-    const mesh = brickMeshes.get(b.id);
-    if (mesh) mesh.rotation.z = b.a0;
+  // The bricks' colors drift in a slow loop, a small change to R, G and B each frame.
+  const s = timer.getElapsed();
+  for (const mesh of brickMeshes.values()) {
+    const base = mesh.userData.base as Color;
+    (mesh.material as MeshBasicMaterial).color.setRGB(
+      base.r + 0.12 * Math.sin(s * 0.9),
+      base.g + 0.12 * Math.sin(s * 0.7 + 2),
+      base.b + 0.12 * Math.sin(s * 0.5 + 4),
+    );
   }
   for (let i = dying.length - 1; i >= 0; i--) {
     const d = dying[i];
@@ -177,23 +213,23 @@ renderer.setAnimationLoop((time) => {
     }
   }
 
-  paddle.rotation.z = game.paddle;
-  paddleMat.color.set(game.magnetTime > 0 ? COLORS.magnet : "#f2efe8");
-  ballMat.color.set(game.slowTime > 0 ? COLORS.slow : "#fff4ec");
-  while (balls.children.length < game.balls.length) balls.add(new Mesh(ballGeo, ballMat));
-  while (balls.children.length > game.balls.length) balls.children.pop();
-  game.balls.forEach((b, i) => {
-    balls.children[i]?.position.set(b.x, b.y, 0);
+  if (paddleHalf !== game.paddleHalf) {
+    paddleHalf = game.paddleHalf;
+    for (const p of paddles) {
+      p.geometry.dispose();
+      p.geometry = new RingGeometry(RIM_R0, RIM_R1, 48, 1, -paddleHalf, paddleHalf * 2);
+    }
+  }
+  game.paddles.forEach((a, i) => {
+    (paddles[i] as Mesh).rotation.z = a;
   });
+  paddleMat.color.copy(tint.copy(PADDLE).lerp(MAGNET, game.magnetFraction));
+  ball.position.set(game.ball.x, game.ball.y, 0);
 
   hud.score.textContent = String(game.score);
   hud.lives.textContent = "●".repeat(Math.max(0, game.lives));
   hud.level.textContent = String(game.level);
-  const fx = [
-    game.slowTime > 0 ? `slow ${Math.ceil(game.slowTime)}` : "",
-    game.magnetTime > 0 ? `magnet ${Math.ceil(game.magnetTime)}` : "",
-  ];
-  hud.fx.textContent = fx.filter(Boolean).join(" · ");
+  hud.fx.textContent = game.magnetTime > 0 ? `magnet ${Math.ceil(game.magnetTime)}` : "";
 
   composer.render();
 });

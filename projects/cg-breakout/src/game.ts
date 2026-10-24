@@ -1,21 +1,25 @@
-// Polar Breakout: bricks are annular sectors around the center, the paddle is an arc
-// on the outer rim. All geometry lives in polar coordinates on the unit disc.
-// This module is pure game state and physics; main.ts draws it.
+// Polar Breakout, after the version Nir Peretz and Tomer Franco handed in (2012): the
+// bricks sit in four rings at the center, and two mirrored paddles ride the rim between
+// four fixed wall segments. Everything is in polar coordinates on the unit disc (the
+// original's 700-pixel window, divided by 350). This module is pure game state and
+// physics; main.ts draws it.
 
 const TAU = Math.PI * 2;
+const DEG = Math.PI / 180;
 
-/** The 2012 exercise's brick kinds (`hit` enum in Brick.h), now all implemented. */
-export type Kind = "regular" | "slow" | "triple" | "magnet" | "passive";
+/** Brick kinds, from the `hit` enum in Brick.h. */
+export type Kind = "regular" | "magnet" | "enlarge" | "shrink";
 
 export interface Brick {
   id: number;
   kind: Kind;
   r0: number;
   r1: number;
-  /** Start angle and angular length, in radians. The start moves when the ring spins. */
+  /** Start angle and angular length, in radians. */
   a0: number;
   len: number;
   ring: number;
+  index: number;
   alive: boolean;
 }
 
@@ -24,8 +28,6 @@ export interface Ball {
   y: number;
   vx: number;
   vy: number;
-  /** Held on the paddle (serve or magnet), at this angle offset from the paddle center. */
-  held: number | null;
 }
 
 export type Event =
@@ -35,19 +37,21 @@ export type Event =
   | { type: "level"; level: number }
   | { type: "over" };
 
-export const BALL_R = 0.017;
-export const PADDLE_R0 = 0.9;
-export const PADDLE_R1 = 0.935;
-const PADDLE_HALF = 0.2;
-const PADDLE_SPEED = 6.5; // rad/s
-const BASE_SPEED = 0.85; // units/s
-const SLOW_FACTOR = 0.55;
-const EFFECT_TIME = 9; // seconds for slow and magnet
-const MAX_DEFLECT = (65 * Math.PI) / 180;
-const RING_R = 0.2;
-const RING_W = 0.055;
-const RING_GAP = 0.018;
-const BRICK_GAP = 0.012; // rad
+const PX = 1 / 350;
+const THICKNESS = 17 * PX;
+export const BALL_R = 10 * PX;
+export const RIM_R0 = 333 * PX; // height/2 - THICKNESS
+export const RIM_R1 = RIM_R0 + THICKNESS;
+/** The fixed wall segments between the paddles: 30–60°, 120–150°, 210–240°, 300–330°. */
+export const WALLS = [30, 120, 210, 300].map((a) => ({ a0: a * DEG, len: 30 * DEG }));
+const PADDLE_HALF = 20 * DEG; // 250–290° and 70–110°
+const MIN_HALF = 5 * DEG;
+const MAX_HALF = 45 * DEG;
+const PADDLE_SPEED = 150 * DEG; // 3° per 20 ms tick
+const BALL_SPEED = 300 * PX; // 6 px per 20 ms tick
+const MAGNET_TIME = 12; // 600 ticks
+const RINGS = 4;
+const GAP = 8 * PX;
 
 const wrap = (a: number) => ((a % TAU) + TAU) % TAU;
 /** Signed shortest angle from a to b, in (-π, π]. */
@@ -55,16 +59,19 @@ const angleDiff = (a: number, b: number) => wrap(b - a + Math.PI) - Math.PI;
 
 export class Game {
   bricks: Brick[] = [];
-  balls: Ball[] = [];
-  /** Angular speed of each ring, rad/s. */
-  ringSpin: number[] = [];
-  paddle = Math.PI * 1.5; // straight down, as in the original (260°–280°)
-  targetPaddle = this.paddle;
+  ball: Ball = { x: 0, y: 0, vx: 0, vy: 0 };
+  /** Waiting for a serve. */
+  serving = true;
+  /** Stuck to a paddle by the magnet, at this angle relative to paddle 0's center. */
+  stuck: number | null = null;
+  /** Center of paddle 0; paddle 1 is always opposite. */
+  paddle = 270 * DEG;
+  paddleHalf = PADDLE_HALF;
+  targetPaddle: number | null = null;
+  magnetTime = 0;
   level = 1;
   score = 0;
   lives = 3;
-  slowTime = 0;
-  magnetTime = 0;
   over = false;
   events: Event[] = [];
 
@@ -72,12 +79,13 @@ export class Game {
     this.loadLevel(1);
   }
 
-  get paddleHalf() {
-    return PADDLE_HALF;
+  get speed() {
+    return BALL_SPEED * (1 + 0.1 * (this.level - 1));
   }
 
-  get speed() {
-    return BASE_SPEED * (1 + 0.08 * (this.level - 1)) * (this.slowTime > 0 ? SLOW_FACTOR : 1);
+  /** Both paddle centers. */
+  get paddles() {
+    return [this.paddle, wrap(this.paddle + Math.PI)];
   }
 
   restart() {
@@ -89,194 +97,191 @@ export class Game {
 
   loadLevel(level: number) {
     this.level = level;
-    this.slowTime = 0;
+    this.paddle = 270 * DEG;
+    this.paddleHalf = PADDLE_HALF;
     this.magnetTime = 0;
     this.bricks = [];
-    this.ringSpin = [];
-    // Level 1 has three still rings; each level adds a ring (up to six) and spins them
-    // in alternating directions, faster as you go.
-    const rings = Math.min(2 + level, 6);
-    let id = 0;
-    for (let ring = 0; ring < rings; ring++) {
-      const r0 = RING_R + ring * (RING_W + RING_GAP);
-      // Equal arc length per brick, so outer rings get more bricks (the original doubled
-      // the count per ring: 4, 8, 16, 32).
-      const count = Math.max(6, Math.round((TAU * r0) / 0.19));
-      const len = TAU / count;
-      const offset = (ring % 2) * len * 0.5;
-      for (let i = 0; i < count; i++) {
+    // init(): 4, 8, 16, 32 bricks per ring, 25 px apart, 1° gap at each end.
+    let index = 0;
+    for (let ring = 0; ring < RINGS; ring++) {
+      const count = 4 * 2 ** ring;
+      const step = 360 / count;
+      const r0 = 30 * PX + ring * (THICKNESS + GAP);
+      for (let j = 0; j < count; j++) {
+        const start = Math.floor(180 / count) + j * step + 1;
         this.bricks.push({
-          id: id++,
-          kind: pickKind(level, ring, i, rings),
+          id: index,
+          kind: "regular",
           r0,
-          r1: r0 + RING_W,
-          a0: offset + i * len + BRICK_GAP / 2,
-          len: len - BRICK_GAP,
+          r1: r0 + THICKNESS,
+          a0: wrap(start * DEG),
+          len: (step - 2) * DEG,
           ring,
+          index: j,
           alive: true,
         });
+        index++;
       }
-      const spin = level === 1 ? 0 : (0.12 + 0.05 * level) * (ring % 2 ? -1 : 1) * (1 - ring * 0.1);
-      this.ringSpin.push(spin);
     }
-    this.balls = [this.servedBall()];
+    // The specials, assigned in the original's order, so later kinds win: index 0 ends
+    // up a shrink brick.
+    for (let i = 0; i < 5; i++) {
+      (this.bricks[i * 11] as Brick).kind = "magnet";
+      (this.bricks[i * 9] as Brick).kind = "enlarge";
+      (this.bricks[i * 5] as Brick).kind = "shrink";
+    }
+    this.serve();
     this.events.push({ type: "level", level });
   }
 
-  private servedBall(): Ball {
-    return { x: 0, y: 0, vx: 0, vy: 0, held: 0 };
+  /** The ball waits where init() put it: low in the window, aimed up and right at 50°. */
+  private serve() {
+    this.serving = true;
+    this.stuck = null;
+    this.ball = { x: 0, y: (55 - 350) * PX, vx: 0, vy: 0 };
   }
 
-  /** Release every held ball inward. */
+  /** Serve, release a magnetized ball toward the center, or restart after game over. */
   launch() {
     if (this.over) {
       this.restart();
       return;
     }
-    for (const b of this.balls) {
-      if (b.held === null) continue;
-      const a = this.paddle + b.held;
-      // Aim inward with a little of the hold offset as spin, like a paddle hit.
-      const dir = a + Math.PI - (b.held / PADDLE_HALF) * MAX_DEFLECT * 0.5;
-      b.vx = Math.cos(dir) * this.speed;
-      b.vy = Math.sin(dir) * this.speed;
-      b.held = null;
+    if (this.serving) {
+      this.serving = false;
+      this.ball.vx = Math.cos(50 * DEG) * this.speed;
+      this.ball.vy = Math.sin(50 * DEG) * this.speed;
+    } else if (this.stuck !== null) {
+      const a = Math.atan2(this.ball.y, this.ball.x) + Math.PI;
+      this.ball.vx = Math.cos(a) * this.speed;
+      this.ball.vy = Math.sin(a) * this.speed;
+      this.stuck = null;
     }
   }
 
-  /** Steer the paddle toward an absolute angle (pointer). */
-  aim(angle: number) {
+  /** Steer by pointer: paddle 0 follows the pointer's angle. */
+  aim(angle: number | null) {
     this.targetPaddle = angle;
   }
 
-  /** Steer the paddle by keyboard: -1, 0 or 1. */
-  nudge(dir: number, dt: number) {
-    if (dir) this.targetPaddle = this.paddle + dir * PADDLE_SPEED * dt;
-  }
-
-  step(dt: number) {
+  step(dt: number, keys: number) {
     if (this.over) return;
-    const d = angleDiff(this.paddle, this.targetPaddle);
-    this.paddle = wrap(this.paddle + Math.sign(d) * Math.min(Math.abs(d), PADDLE_SPEED * dt));
-    this.slowTime = Math.max(0, this.slowTime - dt);
+    let move = keys * PADDLE_SPEED * dt;
+    if (!keys && this.targetPaddle !== null) {
+      const d = angleDiff(this.paddle, this.targetPaddle);
+      move = Math.sign(d) * Math.min(Math.abs(d), PADDLE_SPEED * dt);
+    }
+    this.paddle = wrap(this.paddle + move);
     this.magnetTime = Math.max(0, this.magnetTime - dt);
-    for (const b of this.bricks) {
-      const spin = this.ringSpin[b.ring] ?? 0;
-      b.a0 = wrap(b.a0 + spin * dt);
-    }
 
-    // Keep every free ball at the current speed (slow-ball changes it mid-flight).
-    const speed = this.speed;
-    for (const ball of this.balls) {
-      if (ball.held !== null) {
-        const a = this.paddle + ball.held;
-        const r = PADDLE_R0 - BALL_R - 0.004;
-        ball.x = Math.cos(a) * r;
-        ball.y = Math.sin(a) * r;
-        continue;
-      }
-      const v = Math.hypot(ball.vx, ball.vy) || 1;
-      ball.vx *= speed / v;
-      ball.vy *= speed / v;
-      // Substeps keep each move under half a ball radius, so nothing tunnels.
-      const n = Math.ceil((speed * dt) / (BALL_R * 0.5));
-      for (let i = 0; i < n && ball.held === null; i++) this.move(ball, dt / n);
+    const ball = this.ball;
+    if (this.serving) return;
+    if (this.stuck !== null) {
+      // The magnet holds the ball against the inner face of the paddle it hit.
+      const a = this.paddle + this.stuck;
+      ball.x = Math.cos(a) * (RIM_R0 - BALL_R);
+      ball.y = Math.sin(a) * (RIM_R0 - BALL_R);
+      return;
     }
+    // Substeps keep each move under half a ball radius, so nothing tunnels.
+    const n = Math.ceil((this.speed * dt) / (BALL_R * 0.5));
+    for (let i = 0; i < n && this.stuck === null; i++) this.move(dt / n);
 
-    const before = this.balls.length;
-    this.balls = this.balls.filter((b) => Math.hypot(b.x, b.y) < 1.05);
-    if (this.balls.length < before && this.balls.length === 0) {
+    if (Math.hypot(ball.x, ball.y) > 1.15) {
       this.lives--;
       this.events.push({ type: "lost" });
       if (this.lives <= 0) {
         this.over = true;
         this.events.push({ type: "over" });
-      } else {
-        this.slowTime = 0;
-        this.magnetTime = 0;
-        this.balls = [this.servedBall()];
-      }
+      } else this.serve();
     }
-    if (!this.bricks.some((b) => b.alive && b.kind !== "passive")) {
+    if (!this.bricks.some((b) => b.alive)) {
       this.score += 500 * this.level;
       this.loadLevel(this.level + 1);
     }
   }
 
-  private move(ball: Ball, dt: number) {
+  private move(dt: number) {
+    const ball = this.ball;
     ball.x += ball.vx * dt;
     ball.y += ball.vy * dt;
     for (const brick of this.bricks) {
       if (!brick.alive) continue;
-      const n = sectorContact(ball, brick.r0, brick.r1, brick.a0, brick.len);
-      if (!n) continue;
-      reflect(ball, n);
-      if (brick.kind !== "passive") this.hit(brick);
+      const nrm = sectorContact(ball, brick.r0, brick.r1, brick.a0, brick.len);
+      if (!nrm) continue;
+      reflect(ball, nrm);
+      this.hit(brick);
+      return;
+    }
+    // Paddles first, then the walls, as in timer().
+    for (const center of this.paddles) {
+      const a0 = center - this.paddleHalf;
+      const nrm = sectorContact(ball, RIM_R0, RIM_R1, a0, this.paddleHalf * 2);
+      if (!nrm) continue;
+      if (ball.x * nrm[0] + ball.y * nrm[1] > 0) continue; // only the inner face
+      const angle = Math.atan2(ball.y, ball.x);
+      if (this.magnetTime > 0) {
+        this.stuck = angleDiff(this.paddle, angle);
+        ball.vx = 0;
+        ball.vy = 0;
+        return;
+      }
+      this.paddleBounce(center, angle);
       this.events.push({ type: "bounce" });
       return;
     }
-    // Paddle: only an outward-moving ball can hit it, and the bounce angle depends on
-    // where it lands on the arc rather than on a mirror reflection.
-    const outward = ball.x * ball.vx + ball.y * ball.vy > 0;
-    if (!outward) return;
-    const a0 = this.paddle - PADDLE_HALF;
-    if (!sectorContact(ball, PADDLE_R0, PADDLE_R1, a0, PADDLE_HALF * 2)) return;
-    const offset = Math.max(
-      -1,
-      Math.min(1, angleDiff(this.paddle, Math.atan2(ball.y, ball.x)) / PADDLE_HALF),
-    );
-    if (this.magnetTime > 0) {
-      ball.held = offset * PADDLE_HALF;
+    for (const w of WALLS) {
+      const nrm = sectorContact(ball, RIM_R0, RIM_R1, w.a0, w.len);
+      if (!nrm) continue;
+      reflect(ball, nrm);
+      this.events.push({ type: "bounce" });
       return;
     }
-    const dir = Math.atan2(ball.y, ball.x) + Math.PI - offset * MAX_DEFLECT;
+  }
+
+  /**
+   * Paddle::ChageBallDir: the mirror reflection, averaged (weight 1.5 to 1) with a vector
+   * that leans toward whichever end of the paddle the ball hit, from straight inward at
+   * the center to past the paddle's end at its tips.
+   */
+  private paddleBounce(center: number, angle: number) {
+    const ball = this.ball;
     const s = Math.hypot(ball.vx, ball.vy);
-    ball.vx = Math.cos(dir) * s;
-    ball.vy = Math.sin(dir) * s;
-    this.events.push({ type: "bounce" });
+    const rx = Math.cos(angle);
+    const ry = Math.sin(angle);
+    const dot = ball.vx * rx + ball.vy * ry;
+    const mx = (ball.vx - 2 * dot * rx) / s;
+    const my = (ball.vy - 2 * dot * ry) / s;
+    const offset = Math.max(-1, Math.min(1, angleDiff(center, angle) / this.paddleHalf));
+    const lean = angle + Math.PI - offset * (Math.PI / 2 + this.paddleHalf);
+    let vx = Math.cos(lean) + 1.5 * mx;
+    let vy = Math.sin(lean) + 1.5 * my;
+    // Never send it back out through the paddle.
+    const inward = vx * rx + vy * ry;
+    if (inward > -0.2) {
+      vx -= (inward + 0.2) * rx;
+      vy -= (inward + 0.2) * ry;
+    }
+    const len = Math.hypot(vx, vy);
+    ball.vx = (vx / len) * s;
+    ball.vy = (vy / len) * s;
   }
 
   private hit(brick: Brick) {
     brick.alive = false;
-    this.score += 10 * this.level * (brick.ring + 1);
+    this.score += 10 * this.level * (RINGS - brick.ring);
     this.events.push({ type: "break", brick });
-    switch (brick.kind) {
-      case "slow":
-        this.slowTime = EFFECT_TIME;
-        break;
-      case "magnet":
-        this.magnetTime = EFFECT_TIME;
-        break;
-      case "triple": {
-        // Two extra balls fan out ±25° from the first free ball.
-        const src = this.balls.find((b) => b.held === null);
-        if (!src) break;
-        for (const turn of [-0.44, 0.44]) {
-          const c = Math.cos(turn);
-          const s = Math.sin(turn);
-          this.balls.push({
-            x: src.x,
-            y: src.y,
-            vx: src.vx * c - src.vy * s,
-            vy: src.vx * s + src.vy * c,
-            held: null,
-          });
-        }
-        break;
-      }
-    }
+    // manageHit()
+    if (brick.kind === "magnet") this.magnetTime = MAGNET_TIME;
+    else if (brick.kind === "enlarge")
+      this.paddleHalf = Math.min(MAX_HALF, this.paddleHalf + 3 * DEG);
+    else if (brick.kind === "shrink")
+      this.paddleHalf = Math.max(MIN_HALF, this.paddleHalf - 2 * DEG);
   }
-}
 
-function pickKind(level: number, ring: number, i: number, rings: number): Kind {
-  // Deterministic layout: power-ups at fixed positions, unbreakable bricks from level 3
-  // on the outermost ring.
-  if (level >= 3 && ring === rings - 1 && i % 5 === 0) return "passive";
-  const h = (i * 7 + ring * 13 + level * 3) % 23;
-  if (h === 0) return "triple";
-  if (h === 5) return "slow";
-  if (h === 11) return "magnet";
-  return "regular";
+  get magnetFraction() {
+    return this.magnetTime / MAGNET_TIME;
+  }
 }
 
 /**
@@ -296,9 +301,8 @@ function sectorContact(
   const d = wrap(th - a0);
   let t = th;
   if (d > len) t = d - len < TAU - d ? a0 + len : a0;
-  const inside = d <= len && r >= r0 && r <= r1;
-  if (inside) {
-    // Center inside the brick: push out through the nearer ring edge.
+  if (d <= len && r >= r0 && r <= r1) {
+    // Center inside the sector: push out through the nearer ring edge.
     const out = r - r0 < r1 - r ? -1 : 1;
     return [Math.cos(th) * out, Math.sin(th) * out];
   }

@@ -106,7 +106,7 @@ built-ins; three.js supplies the WebGL plumbing. Sources: `/Volumes/T7/01_School
 
 | Project        | From                    | Notes                                                                                                                      |
 | -------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `cg-breakout`  | `CGEx1` (2012)          | Circular Breakout. The exercise was unfinished; its planned brick kinds (slow, triple, magnet, passive) now work.          |
+| `cg-breakout`  | `brick` (2012)          | Circular Breakout, from the handed-in version in `computer graphics/brick` (the `CGEx1` folder is an earlier draft).       |
 | `cg-mesh-lab`  | `cge1` + `CGEx3` (2013) | OFF/OBJ viewer: Shoemake arcball, the course shaders in GLSL ES 3.0, two-sided lighting, Catmull-Clark with the morph.     |
 | `cg-raytracer` | `CGEx4` (2013)          | The recursive CPU tracer as a progressive GPU path: one stochastic branch per hit, averaged over frames. Both scenes kept. |
 

@@ -4,7 +4,7 @@
   "title": "Polar Breakout",
   "visibility": "listed",
   "kind": "game",
-  "description": "Breakout on a disc: rings of bricks, a paddle riding the rim. A 2012 OpenGL/GLUT course exercise, finished and ported to three.js.",
+  "description": "Breakout on a disc, as Nir Peretz and Tomer Franco built it in 2012: four rings of bricks at the center, two mirrored paddles on the rim, enlarge, shrink and magnet bricks. Ported from OpenGL/GLUT to three.js.",
   "tags": ["three.js", "game", "huji cg"],
   "year": 2012,
   "thumbnail": "thumb.webp",
